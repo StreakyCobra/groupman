@@ -48,11 +48,12 @@ def group_info(group):
     if os.path.isfile(path):
         with open(path, 'r') as f:
             packages = f.read().strip().split('\n')
+    # TODO filter lines beginning with '#'
     return {'name': group, 'path': path, 'packages': packages}
 
 
 def get_groups(groups, verify=True):
-    """Return informations about a list group."""
+    """Return groups informations."""
     # Get existing groups
     existing = list_groups()
 
@@ -137,6 +138,12 @@ def cmd_init(args):
         f.write('\n'.join(packages))
 
 
+def cmd_status(args):
+    """Get the status of packages and groups."""
+    # TODO write method
+    pass
+
+
 def cmd_install(args):
     """Install group(s) of packages."""
     # Get groups
@@ -198,11 +205,17 @@ def main():
     # Subcommand parser
     subparsers = parser.add_subparsers()
 
-    # Install command
+    # Init command
     parser_init = subparsers.add_parser('init',
                                         help="init groupman")
     parser_init.set_defaults(cmd=cmd_init)
 
+    # Status command
+    parser_status = subparsers.add_parser('status',
+                                          help="Packages and groups status")
+    parser_status.set_defaults(cmd=cmd_status)
+
+    # Install command
     parser_install = subparsers.add_parser('install',
                                            help="install group(s) of packages")
     parser_install.add_argument('group',
@@ -234,7 +247,7 @@ def main():
                              help="group(s) of packages to install")
     parser_edit.set_defaults(cmd=cmd_edit)
 
-    # Argrument: Update packages list
+    # Update packages first
     parser.add_argument('-y',
                         action="store_true",
                         help="update package list with pacman first")
