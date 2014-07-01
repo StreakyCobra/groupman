@@ -20,7 +20,7 @@ __groups__ = os.path.join(__config__, 'groups')
 if not os.path.isdir(__config__):
     os.makedirs(__config__)
 # Ensure groups folder is existing
-if not os.path.isdir(__config__):
+if not os.path.isdir(__groups__):
     os.makedirs(__groups__)
 # Ensure database is existing
 if not os.path.isfile(__db__):
@@ -52,7 +52,7 @@ def group_info(group):
     return {'name': group, 'path': path, 'packages': packages}
 
 
-def get_groups(groups, verify=True):
+def groups_info(groups, verify=True):
     """Return groups informations."""
     # Get existing groups
     existing = list_groups()
@@ -61,11 +61,15 @@ def get_groups(groups, verify=True):
     result = list()
 
     # Keep group only if existing
-    for group in groups:
-        if not verify or group in existing:
+    if groups:
+        for group in groups:
+            if not verify or group in existing:
+                result.append(group_info(group))
+            else:
+                print_err('Group "%s" is not existing: ignoring' % group)
+    else:
+        for group in existing:
             result.append(group_info(group))
-        else:
-            print_err('Group "%s" is not existing: ignoring' % group)
     return result
 
 
@@ -141,13 +145,14 @@ def cmd_init(args):
 def cmd_status(args):
     """Get the status of packages and groups."""
     # TODO write method
-    pass
+    for group in db_list():
+        print(group)
 
 
 def cmd_install(args):
     """Install group(s) of packages."""
     # Get groups
-    groups = get_groups(args.group)
+    groups = groups_info(args.group)
     # Add group in DB
     db_add([g['name'] for g in groups])
 
@@ -155,7 +160,7 @@ def cmd_install(args):
 def cmd_remove(args):
     """Remove group(s) of packages."""
     # Get groups
-    groups = get_groups(args.group, verify=False)
+    groups = groups_info(args.group, verify=False)
     # Add group in DB
     db_remove([g['name'] for g in groups])
 
@@ -165,7 +170,7 @@ def cmd_upgrade(args):
     # Get groups in DB
     groups_list = db_list()
     # Get groups
-    groups = get_groups(groups_list, verify=False)
+    groups = groups_info(groups_list, verify=False)
     # List of desired packages
     desired = [p for g in groups for p in g['packages']]
     # List of installed packages
@@ -186,7 +191,7 @@ def cmd_upgrade(args):
 def cmd_edit(args):
     """Run the default editor to edit specific group(s) of packages."""
     # Get groups
-    groups = get_groups(args.group, verify=False)
+    groups = groups_info(args.group, verify=False)
     # Get files paths
     files = [x['path'] for x in groups]
     # Get prefered editor, 'vim' if not defined
@@ -243,7 +248,7 @@ def main():
                                         help="edit group(s) of packages")
     parser_edit.add_argument('group',
                              type=str,
-                             nargs='+',
+                             nargs='*',
                              help="group(s) of packages to install")
     parser_edit.set_defaults(cmd=cmd_edit)
 
