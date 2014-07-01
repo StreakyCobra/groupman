@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 """Edit the given group(s) of packages."""
 
-import os
+from subprocess import call
+
+from groupman.core.config import g
+from groupman.core.groups import groups_info
 
 _name = 'edit'
 _help = 'edit the given group(s) of packages'
@@ -22,9 +25,7 @@ def run(args):
     groups = groups_info(args.group, verify=False)
     # Get files paths
     files = [x['path'] for x in groups]
-    # Get prefered editor, 'vim' if not defined
-    EDITOR = os.environ.get('EDITOR', 'vim')
     # If there is file to edit
     if files:
         # Call the editor to edit group files
-        call([EDITOR] + files)
+        call([g('EDITOR')] + files)
