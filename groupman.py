@@ -1,13 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+# Import the main function of groupman
 from groupman.__main__ import run
 
-
-def main():
-    run()
-
-
-# When used as script
+# When used as script, run groupman
 if __name__ == "__main__":
-    main()
+    run()
