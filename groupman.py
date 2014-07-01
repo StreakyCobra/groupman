@@ -145,8 +145,16 @@ def cmd_init(args):
 def cmd_status(args):
     """Get the status of packages and groups."""
     # TODO write method
-    for group in db_list():
-        print(group)
+    # Get existing groups
+    existing = list_groups()
+    installed = db_list()
+    print(">>> Installed")
+    for group in installed:
+            print(group)
+    print(">>> Not Installed")
+    for group in existing:
+        if group not in installed:
+            print(group)
 
 
 def cmd_install(args):
