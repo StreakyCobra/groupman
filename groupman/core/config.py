@@ -1,18 +1,83 @@
 # -*- coding: utf-8 -*-
 
-__home__ = os.environ.get('HOME', '~')
-__config__ = os.path.join(__home__, '.config/groupman')
-__db__ = os.path.join(__config__, 'installed')
-__groups__ = os.path.join(__config__, 'groups')
+import os
+from collections import OrderedDict
 
-# Ensure configuration folder is existing
-if not os.path.isdir(__config__):
-    os.makedirs(__config__)
-# Ensure groups folder is existing
-if not os.path.isdir(__groups__):
-    os.makedirs(__groups__)
-# Ensure database is existing
-if not os.path.isfile(__db__):
-    with open(__db__, 'w') as f:
+
+# Default configuration values
+defaults = OrderedDict()
+defaults['PACMAN'] = 'pacman'
+defaults['PACMAN_USE_SUDO'] = 'true'
+
+# Set some paths
+home_path     = os.environ.get('HOME')
+xdg_path      = os.environ.get('XDG_CONFIG_HOME', os.path.join(home_path, '.config'))
+groupman_path = os.path.join(xdg_path, 'groupman')
+db_path       = os.path.join(groupman_path, 'db')
+config_path   = os.path.join(groupman_path, 'config')
+groups_path   = os.path.join(groupman_path, 'groups')
+
+
+def read_conf(filepath):
+    """Read the configuration file."""
+    # Read lines in the file
+    with open(filepath, 'r') as f:
+        lines = f.readlines()
+    # Strip lines
+    lines = map(lambda x: x.strip(), lines)
+    # Remove comments
+    lines = filter(lambda x: x[0] != '#', lines)
+    lines = map(lambda x: x.split('#')[0], lines)
+    # Split at equal sign
+    lines = map(lambda x: x.split('='), lines)
+    # Remove lines that have not 2 values
+    lines = filter(lambda x: len(x) == 2, lines)
+    # Prepare to be transformed as a dict
+    lines = map(lambda x: (x[0].strip(), x[1].strip()), lines)
+    # Transform to dict
+    vals = OrderedDict(lines)
+    # Return dictionnary
+    return vals
+
+
+def write_conf(vals, filepath):
+    """Write the configuration file from the given dictionary."""
+    lines = map(lambda x: "%s = %s\n" % (str(x[0]), str(x[1])), vals.items())
+    with open(filepath, 'w') as f:
+        f.writelines(lines)
+
+
+# Ensure groupman config folder is existing
+if not os.path.isdir(groupman_path):
+    os.makedirs(groupman_path)
+# Ensure database file is existing
+if not os.path.isfile(db_path):
+    with open(db_path, 'w') as f:
         f.write('')
+# Ensure config file is existing
+if not os.path.isfile(config_path):
+    write_conf(defaults, config_path)
+# Ensure groups folder is existing
+if not os.path.isdir(groups_path):
+    os.makedirs(groups_path)
 
+# Read the user configuration
+user_conf = read_conf(config_path)
+
+
+def g(val):
+    """Get a configuration value by its key.
+    Return user defined value if existing, otherwise the defaults value. Raise
+    an KeyError if the key is not existing in both.
+    """
+    # If the user has defined the value return it
+    if val in user_conf:
+        return user_conf[val]
+    # If there is a default value return it
+    elif val in defaults:
+        return defaults[val]
+    # Otherwise raise an exception
+    else:
+        raise KeyError('Configuration key not existing.')
+
+print(user_conf)
