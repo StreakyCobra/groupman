@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+"""Some utility functions."""
 
 import pkgutil
 import importlib

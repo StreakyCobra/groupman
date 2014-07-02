@@ -1,38 +1,49 @@
 # -*- coding: utf-8 -*-
+"""Manage the database."""
+
+import groupman.core.config as c
+
+
+def _db_read():
+    """Parse the database file and return the list of groups."""
+    # Read groups from db
+    with open(c.db_path, 'r') as f:
+        lst = f.read().strip().split('\n')
+    # Remove empty lines
+    lst = filter(lambda x: x, lst)
+    # Return list of groups
+    return list(lst)
+
+
+def _db_write(lst):
+    """Write the list of groups in the database file."""
+    # Remove duplicates and sort the groups
+    lst = list(sorted(list(set(lst))))
+    # Write groups to db
+    with open(c.db_path, 'w') as f:
+        f.write('\n'.join(lst) + '\n')
 
 
 def db_list():
-    """List all packages into the database."""
-    # Read packages
-    with open(__db__, 'r') as f:
-        lst = f.read().strip().split('\n')
-    # Return the list
-    return lst
+    """List all packages in the database."""
+    return _db_read()
 
 
 def db_add(groups):
-    """Add some groups to the database."""
-    # Read packages
-    with open(__db__, 'r') as f:
-        lst = f.read().strip().split('\n')
+    """Add the given group(s) to the database."""
+    # Get list of groups
+    lst = _db_read()
     # Add and sort packages list
     lst += groups
-    lst = list(sorted(list(set(lst))))
-    # Write modified packages list
-    with open(__db__, 'w') as f:
-        f.write('\n'.join(lst) + '\n')
+    # Write new list to the database
+    _db_write(lst)
 
 
 def db_remove(groups):
-    """Remove some groups from the database."""
-    # Read packages
-    with open(__db__, 'r') as f:
-        lst = f.read().strip().split('\n')
-    # Remove and sort packages list
-    lst = [l for l in lst if not l in groups]
-    lst = list(sorted(list(set(lst))))
-    # Write modified packages list
-    with open(__db__, 'w') as f:
-        f.write('\n'.join(lst) + '\n')
-
-
+    """Remove the given group(s) from the database."""
+    # Get list of groups
+    lst = _db_read()
+    # Remove groups from list
+    lst = [g for g in lst if g not in groups]
+    # Write new list to the database
+    _db_write(lst)

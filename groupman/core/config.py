@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+"""Manage the configuration."""
 
 import os
 from collections import OrderedDict

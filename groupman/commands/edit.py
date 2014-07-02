@@ -4,7 +4,7 @@
 from subprocess import call
 
 from groupman.core.config import g
-from groupman.core.groups import groups_info
+from groupman.core.groups import group_info
 
 _name = 'edit'
 _help = 'edit the given group(s) of packages'
@@ -22,7 +22,7 @@ def add_to_subparsers(subparsers):
 
 def run(args):
     # Get groups
-    groups = groups_info(args.group, verify=False)
+    groups = map(group_info, args.group)
     # Get files paths
     files = [x['path'] for x in groups]
     # If there is file to edit
