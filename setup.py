@@ -1,16 +1,16 @@
-import groupman
+import groupman as gm
 from distutils.core import setup
 
 with open('README.rst') as f:
     long_description = f.read()
 
-setup(name=pws.__appname__,
-      version=pws.__version__,
-      description=pws.__description__,
+setup(name=gm.__appname__,
+      version=gm.__version__,
+      description=gm.__description__,
       long_description=long_description,
-      author=pws.__author__,
-      author_email=pws.__authormail__,
-      url=pws.__projecturl__,
+      author=gm.__author__,
+      author_email=gm.__authormail__,
+      url=gm.__projecturl__,
       packages=['groupman',
                 'groupman.commands',
                 'groupman.core'],
