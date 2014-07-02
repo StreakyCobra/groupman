@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Give the status of the group(s)."""
 
-from groupman.core.groups import existing_groups, installed_groups
+from groupman.core.groups import existing_groups, installed_groups, deps_groups
 from groupman.core.prettyprint import pr_list, pr_info
 
 _name = 'status'
@@ -19,10 +19,11 @@ def run(args):
     existing = list(map(lambda x: x['name'], existing_groups()))
     # Get installed groups
     installed = list(map(lambda x: x['name'], installed_groups()))
-    # Not installed groups
-    not_installed = [group for group in existing if group not in installed]
     # Dependencies
-    depends = [d for g in installed_groups() for d in g['depends'] if d not in installed]
+    depends = [d for group in installed_groups() for d in deps_groups(group['name'])]
+    # Not installed groups
+    not_installed = [group for group in existing if group not in installed and
+                     group not in depends]
     # Display installed packages
     if installed:
         pr_info("Installed (explicit):", boxed=True)

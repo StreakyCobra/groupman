@@ -74,6 +74,14 @@ def installed_groups():
     return list(map(group_info, lst))
 
 
+def deps_groups(groupname):
+    group = group_info(groupname)
+    groups = group['depends']
+    for dep in group['depends']:
+        groups.extend(deps_groups(dep))
+    return groups
+
+
 def deps_packages(groupname):
     group = group_info(groupname)
     packages = group['packages']
