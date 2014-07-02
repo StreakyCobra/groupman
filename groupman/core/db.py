@@ -39,11 +39,11 @@ def db_add(groups):
     _db_write(lst)
 
 
-def db_remove(groups):
-    """Remove the given group(s) from the database."""
+def db_del(groups):
+    """Delete the given group(s) from the database."""
     # Get list of groups
     lst = _db_read()
-    # Remove groups from list
+    # Delete groups from list
     lst = [g for g in lst if g not in groups]
     # Write new list to the database
     _db_write(lst)

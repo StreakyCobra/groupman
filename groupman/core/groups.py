@@ -2,6 +2,7 @@
 """Helper to manange groups and packages."""
 
 import os
+from collections import OrderedDict
 
 import groupman.core.config as c
 from groupman.core.pacman import pacman
@@ -20,16 +21,31 @@ def installed_packages():
     return [x for x in explicit_packages if x not in base_packages]
 
 
-def group_info(group):
-    """Return informations about a given group."""
-    # TODO complex parsing here
-    # TODO filter lines beginning with '#'
-    path = os.path.join(c.groups_path, group)
+def group_info(name):
+    """Return informations about a given group name."""
+    # Path to the group file
+    path = os.path.join(c.groups_path, name)
+    # Prepare the list of packages and depends
     packages = []
+    depends = []
+    # Read the file if existing
     if os.path.isfile(path):
         with open(path, 'r') as f:
-            packages = f.read().strip().split('\n')
-    return {'name': group, 'path': path, 'packages': packages}
+            lines = f.readlines()
+        # Strip lines
+        lines = map(lambda x: x.strip(), lines)
+        # Remove empty lines
+        lines = filter(lambda x: x, lines)
+        # Remove comments
+        lines = filter(lambda x: x[0] != '#', lines)
+        lines = list(map(lambda x: x.split('#')[0].strip(), lines))
+        # Separate packages and groups
+        packages = [x for x in lines if x[0] != '@']
+        depends = [x[1:] for x in lines if x[0] == '@']
+    return OrderedDict({'name': name,
+                        'path': path,
+                        'packages': packages,
+                        'depends': depends})
 
 
 def _existing_groups_names():

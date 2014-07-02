@@ -2,11 +2,12 @@
 """Initialize the system with already installed packages."""
 
 import os
+import sys
 
 import groupman.core.config as c
-from groupman.core.config import g
-from groupman.core.db import db_add, db_list
+from groupman.core.db import db_add
 from groupman.core.groups import installed_packages
+from groupman.core.prettyprint import pr_success, pr_error
 
 _name = 'init'
 _help = 'initialize the system with already installed packages.'
@@ -21,9 +22,9 @@ def add_to_subparsers(subparsers):
 def run(args):
     # Verify if packages are not already existing
     if os.listdir(c.groups_path):
-        print("There is already configured groups.")
-        return
-    print(db_list())
+        pr_error("There is already existing groups, "
+                 "will not initalize a second time")
+        sys.exit(1)
     # Get installed packages
     packages = installed_packages()
     # Create a base group with installed packages
@@ -31,3 +32,5 @@ def run(args):
         f.write('\n'.join(packages))
     # Add base group to db
     db_add(['base'])
+    # Print
+    pr_success('Initialization complete. A `base` packages has been created.')

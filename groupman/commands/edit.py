@@ -4,11 +4,12 @@
 from subprocess import call
 
 from groupman.core.config import g
-from groupman.core.groups import group_info
+from groupman.core.groups import group_info, existing_groups
+from groupman.core.prettyprint import pr, pr_info, pr_warn
 
 _name = 'edit'
 _help = 'edit the given group(s) of packages'
-order = 60
+order = 70
 
 
 def add_to_subparsers(subparsers):
@@ -22,10 +23,17 @@ def add_to_subparsers(subparsers):
 
 def run(args):
     # Get groups
-    groups = map(group_info, args.group)
+    if args.group:
+        groups = list(map(group_info, args.group))
+    else:
+        groups = existing_groups()
     # Get files paths
     files = [x['path'] for x in groups]
     # If there is file to edit
     if files:
-        # Call the editor to edit group files
-        call([g('EDITOR')] + files)
+        pr_info('The following groups will be edited:')
+        pr('\n'.join([x['name'] for x in groups]))
+        # Call the editor
+        call([g('EDITOR'), '--'] + files)
+    else:
+        pr_warn('No files to edit')

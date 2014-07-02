@@ -7,8 +7,16 @@ from collections import OrderedDict
 # Default configuration values
 defaults = OrderedDict()
 defaults['EDITOR'] = os.environ.get('EDITOR', 'vim')
-defaults['PACMAN'] = os.environ.get('PACMAN', 'pacman')
-defaults['USE_SUDO'] = 'true' if defaults['PACMAN'] == 'pacman' else 'false'
+defaults['PACMAN_CMD'] = os.environ.get('PACMAN_CMD', 'pacman')
+defaults['PACMAN_SUDO'] = 'true'
+defaults['PACMAN_INSTALL'] = '-S'
+defaults['PACMAN_REMOVE'] = '-Rs'
+
+# Special configuration
+if defaults['PACMAN_CMD'] == 'yaourt':
+    defaults['PACMAN_INSTALL'] = '-S'
+    defaults['PACMAN_SUDO'] = 'false'
+    defaults['PACMAN_REMOVE'] = '-Rncs'
 
 # Set some paths
 home_path     = os.environ.get('HOME')
@@ -26,6 +34,8 @@ def _read_conf(filepath):
         lines = f.readlines()
     # Strip lines
     lines = map(lambda x: x.strip(), lines)
+    # Remove empty lines
+    lines = filter(lambda x: x, lines)
     # Remove comments
     lines = filter(lambda x: x[0] != '#', lines)
     lines = map(lambda x: x.split('#')[0], lines)
