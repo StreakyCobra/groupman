@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 """Give the status of the packages."""
 
+import sys
+
 from groupman.core.db import db_list
 from groupman.core.groups import group_info, installed_packages, deps_packages
 from groupman.core.prettyprint import pr_list, pr_info
@@ -16,6 +18,9 @@ def add_to_subparsers(subparsers):
 
 
 def run(args):
+    # If the completion is wanted
+    if args.completion:
+        completion(args)
     # Get installed groups from DB
     groups = map(group_info, db_list())
     # List of needed packages
@@ -33,3 +38,7 @@ def run(args):
     if to_remove:
         pr_info("Supplementary packages:", boxed=True)
         pr_list('\n'.join(to_remove))
+
+
+def completion(args):
+    sys.exit()

@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 """Update the system."""
 
+import sys
+
 from groupman.core.config import g
 from groupman.core.db import db_list
 from groupman.core.groups import group_info, installed_packages, deps_packages
@@ -18,6 +20,9 @@ def add_to_subparsers(subparsers):
 
 
 def run(args):
+    # If the completion is wanted
+    if args.completion:
+        completion(args)
     # Get installed groups from DB
     groups = list(map(group_info, db_list()))
     # List of needed packages
@@ -43,3 +48,7 @@ def run(args):
     if to_remove:
         pr_info("Removing...")
         pacman([g('PACMAN_REMOVE')] + to_remove, output=False)
+
+
+def completion(args):
+    sys.exit()

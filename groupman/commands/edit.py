@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """Edit the given group(s) of packages."""
 
+import sys
 from subprocess import call
 
 from groupman.core.config import g
@@ -22,6 +23,9 @@ def add_to_subparsers(subparsers):
 
 
 def run(args):
+    # If the completion is wanted
+    if args.completion:
+        completion(args)
     # Get groups
     if args.group:
         groups = list(map(group_info, args.group))
@@ -37,3 +41,14 @@ def run(args):
         call([g('EDITOR'), '--'] + files)
     else:
         pr_warn('No files to edit')
+
+
+def completion(args):
+    # Get existing groups
+    existing = [x['name'] for x in existing_groups()]
+    # Propositions to print
+    to_print = [group for group in existing if group not in args.group]
+    # Print propositions
+    if to_print:
+        print('\n'.join(to_print))
+    sys.exit()

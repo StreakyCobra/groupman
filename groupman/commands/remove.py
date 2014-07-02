@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 """Remove the given group(s) of packages."""
 
+import sys
+
 from groupman.core.db import db_del
 from groupman.core.groups import existing_groups, installed_groups
 from groupman.core.prettyprint import pr_list, pr_info, pr_success, pr_warn
@@ -14,15 +16,18 @@ def add_to_subparsers(subparsers):
     parser = subparsers.add_parser(_name, help=_help)
     parser.add_argument('group',
                         type=str,
-                        nargs='+',
+                        nargs='*',
                         help="the group(s) of packages to remove")
     parser.set_defaults(cmd=run)
 
 
 def run(args):
-    # Get existing packages
+    # If the completion is wanted
+    if args.completion:
+        completion(args)
+    # Get existing groups
     existing = [x['name'] for x in existing_groups()]
-    # Get installed packages
+    # Get installed groups
     installed = [x['name'] for x in installed_groups()]
     # Groups to uninstall
     to_uninstall = [g for g in args.group if g in existing and g in installed]
@@ -44,3 +49,14 @@ def run(args):
         db_del(to_uninstall)
         pr_success('Groups successfully removed:', boxed=True)
         pr_list('\n'.join(to_uninstall))
+
+
+def completion(args):
+    # Get installed groups
+    installed = [x['name'] for x in installed_groups()]
+    # Propositions to print
+    to_print = [group for group in installed if group not in args.group]
+    # Print propositions
+    if to_print:
+        print('\n'.join(to_print))
+    sys.exit()

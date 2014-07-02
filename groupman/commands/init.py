@@ -20,6 +20,9 @@ def add_to_subparsers(subparsers):
 
 
 def run(args):
+    # If the completion is wanted
+    if args.completion:
+        completion(args)
     # Verify if packages are not already existing
     if os.listdir(c.groups_path):
         pr_error("There is already existing groups, "
@@ -34,3 +37,7 @@ def run(args):
     db_add(['base'])
     # Print
     pr_success('Initialization complete. A `base` packages has been created.')
+
+
+def completion(args):
+    sys.exit()

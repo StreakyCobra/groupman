@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 """Give the status of the group(s)."""
 
+import sys
+
 from groupman.core.groups import existing_groups, installed_groups, deps_groups
 from groupman.core.prettyprint import pr_list, pr_info
 
@@ -15,6 +17,9 @@ def add_to_subparsers(subparsers):
 
 
 def run(args):
+    # If the completion is wanted
+    if args.completion:
+        completion(args)
     # Get existing groups
     existing = list(map(lambda x: x['name'], existing_groups()))
     # Get installed groups
@@ -36,3 +41,7 @@ def run(args):
     if not_installed:
         pr_info("Not installed", boxed=True)
         pr_list('\n'.join(not_installed))
+
+
+def completion(args):
+    sys.exit()
