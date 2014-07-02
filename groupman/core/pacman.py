@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """Pacman wrapper."""
 
+import sys
 from subprocess import call, check_output
 
 from groupman.core.config import g
@@ -24,3 +25,4 @@ def pacman(args, force_sudo=None, output=True):
         return output
     except KeyboardInterrupt:
         pr_error("Cancelled")
+        sys.exit(1)

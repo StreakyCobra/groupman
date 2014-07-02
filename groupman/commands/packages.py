@@ -5,7 +5,7 @@ from groupman.core.config import g
 from groupman.core.db import db_list
 from groupman.core.groups import group_info, installed_packages
 from groupman.core.pacman import pacman
-from groupman.core.prettyprint import pr, pr_info
+from groupman.core.prettyprint import pr_list, pr_info
 
 _name = 'packages'
 _help = 'give the status of the packages'
@@ -30,8 +30,8 @@ def run(args):
     to_remove = list(set([x for x in installed if x not in desired]))
     # Display packages
     if to_install:
-        pr_info("Package(s) to install:")
-        pr('\n'.join(to_install))
+        pr_info("Missing packages:", boxed=True)
+        pr_list('\n'.join(to_install))
     if to_remove:
-        pr_info("Package(s) to remove:")
-        pr('\n'.join(to_remove))
+        pr_info("Supplementary packages:", boxed=True)
+        pr_list('\n'.join(to_remove))

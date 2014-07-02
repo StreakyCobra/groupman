@@ -5,7 +5,7 @@ from subprocess import call
 
 from groupman.core.config import g
 from groupman.core.groups import group_info, existing_groups
-from groupman.core.prettyprint import pr, pr_info, pr_warn
+from groupman.core.prettyprint import pr_list, pr_info, pr_warn
 
 _name = 'edit'
 _help = 'edit the given group(s) of packages'
@@ -31,8 +31,8 @@ def run(args):
     files = [x['path'] for x in groups]
     # If there is file to edit
     if files:
-        pr_info('The following groups will be edited:')
-        pr('\n'.join([x['name'] for x in groups]))
+        pr_info('The following groups will be edited:', boxed=True)
+        pr_list('\n'.join([x['name'] for x in groups]))
         # Call the editor
         call([g('EDITOR'), '--'] + files)
     else:

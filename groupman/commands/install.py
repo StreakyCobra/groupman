@@ -3,7 +3,7 @@
 
 from groupman.core.db import db_add
 from groupman.core.groups import existing_groups, installed_groups
-from groupman.core.prettyprint import pr, pr_info, pr_success, pr_warn
+from groupman.core.prettyprint import pr_list, pr_info, pr_success, pr_warn
 
 _name = 'install'
 _help = 'install the given group(s) of packages'
@@ -32,15 +32,15 @@ def run(args):
     already_installed = [g for g in args.group if g in installed]
     # Display not existing groups
     if not_existing:
-        pr_warn('Groups not existing, skipped:')
-        pr('\n'.join(not_existing))
+        pr_warn('Groups not existing, skipped:', boxed=True)
+        pr_list('\n'.join(not_existing))
     # Display not found groups
     if already_installed:
-        pr_info('Groups already installed:')
-        pr('\n'.join(already_installed))
+        pr_info('Groups already installed:', boxed=True)
+        pr_list('\n'.join(already_installed))
     # Install missing groups
     if to_install:
         # Add group in DB
         db_add(to_install)
-        pr_success('Groups successfully installed:')
-        pr('\n'.join(to_install))
+        pr_success('Groups successfully installed:', boxed=True)
+        pr_list('\n'.join(to_install))
