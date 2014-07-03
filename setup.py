@@ -14,4 +14,4 @@ setup(name=gm.__appname__,
       packages=['groupman',
                 'groupman.commands',
                 'groupman.core'],
-      scripts=['grpman'])
+      scripts=['scripts/grpman'])
