@@ -40,11 +40,11 @@ def run(args):
     # Install missing packages
     if to_install:
         pr_info("Installing...")
-        pacman(get('PACMAN_INSTALL', aslist=True) + to_install, output=False)
+        pacman(get('PACMAN_INSTALL', aslist=True) + ['--'] + to_install, output=False)
     # Remove unneeded packages
     if to_remove:
         pr_info("Removing...")
-        pacman(get('PACMAN_REMOVE', aslist=True) + to_remove, output=False)
+        pacman(get('PACMAN_REMOVE', aslist=True) + ['--'] + to_remove, output=False)
 
 
 def completion(args):
