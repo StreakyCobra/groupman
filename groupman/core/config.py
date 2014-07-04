@@ -4,19 +4,20 @@
 import os
 from collections import OrderedDict
 
+# Configuration list separator
+SEP = '+'
+
 # Default configuration values
 defaults = OrderedDict()
 defaults['EDITOR'] = os.environ.get('EDITOR', 'vim')
 defaults['PACMAN_CMD'] = os.environ.get('PACMAN_CMD', 'pacman')
 defaults['PACMAN_SUDO'] = 'true'
-defaults['PACMAN_INSTALL'] = '-S --needed'
+defaults['PACMAN_INSTALL'] = '-S ' + SEP + ' --needed'
 defaults['PACMAN_REMOVE'] = '-Rs'
 
 # Special configuration
 if defaults['PACMAN_CMD'] == 'yaourt':
-    defaults['PACMAN_INSTALL'] = '-S --needed'
     defaults['PACMAN_SUDO'] = 'false'
-    defaults['PACMAN_REMOVE'] = '-Rncs'
 
 # Set some paths
 home_path     = os.environ.get('HOME')
@@ -81,17 +82,23 @@ if not os.path.isdir(groups_path):
 user_conf = _read_conf(config_path)
 
 
-def get(val):
+def get(val, aslist=False):
     """Get a configuration value by its key.
     Return user defined value if existing, otherwise the defaults value. Raise
     an KeyError if the key is not existing in both.
     """
+    result = None
     # If the user has defined the value return it
     if val in user_conf:
-        return user_conf[val]
+        result = user_conf[val]
     # If there is a default value return it
     elif val in defaults:
-        return defaults[val]
-    # Otherwise raise an exception
-    else:
+        result = defaults[val]
+    # Raise an exception if not found
+    if result is None:
         raise KeyError('Configuration key not existing.')
+    # Return the result
+    if aslist:
+        return list(map(lambda x: x.strip(), result.split(SEP)))
+    else:
+        return result
