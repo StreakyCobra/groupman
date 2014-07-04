@@ -5,7 +5,8 @@ import os
 from collections import OrderedDict
 
 import groupman.core.config as conf
-from groupman.core.db import db_list
+from groupman.core.db import db_list, db_del
+from groupman.core.prettyprint import pr_list, pr_err
 
 SYM_GROUP = '@'
 SYM_COMMENT = '#'
@@ -100,3 +101,24 @@ def installed_groups():
     lst = db_list()
     # Read and return groups
     return list(map(group_info, lst))
+
+
+def check_groups():
+    """Verify that installed groups in db are still existing."""
+    # Get installed groups
+    installed = list(map(lambda x: x['name'], installed_groups()))
+    # Get existing groups
+    existing = list(map(lambda x: x['name'], existing_groups()))
+    # List unexisting installed groups
+    missing = [x for x in installed if x not in existing]
+    # Check if any:
+    if missing:
+        # Print packages
+        pr_err("The following groups are listed in database but are not existing:", boxed=True)
+        pr_list(missing)
+        # Remove them from db
+        map(db_del, missing)
+        # Say that is now fixed
+        pr_err("Database fixed")
+
+check_groups()
