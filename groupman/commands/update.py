@@ -3,10 +3,10 @@
 
 import sys
 
-from groupman.core.config import g
-from groupman.core.packages import desired_packages, installed_packages
+from groupman.core.config import get
 from groupman.core.pacman import pacman
-from groupman.core.prettyprint import pr_list, pr_info
+from groupman.extra.packages import desired_packages, installed_packages
+from groupman.utils.display import pr_list, pr_info
 
 _name = 'update'
 _help = 'update the system'
@@ -40,11 +40,11 @@ def run(args):
     # Install missing packages
     if to_install:
         pr_info("Installing...")
-        pacman([g('PACMAN_INSTALL')] + to_install, output=False)
+        pacman([get('PACMAN_INSTALL')] + to_install, output=False)
     # Remove unneeded packages
     if to_remove:
         pr_info("Removing...")
-        pacman([g('PACMAN_REMOVE')] + to_remove, output=False)
+        pacman([get('PACMAN_REMOVE')] + to_remove, output=False)
 
 
 def completion(args):

@@ -2,7 +2,7 @@
 """Helper to manage packages."""
 
 from groupman.core.pacman import pacman
-from groupman.core.groups import installed_groups
+from groupman.extra.groups import installed_groups
 
 
 def installed_packages():

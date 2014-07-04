@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 """Manage the database."""
 
-import groupman.core.config as c
+import groupman.core.config as conf
 
 
 def _db_read():
     """Parse the database file and return the list of groups."""
     # Read groups from db
-    with open(c.db_path, 'r') as f:
+    with open(conf.db_path, 'r') as f:
         lst = f.read().strip().split('\n')
     # Remove empty lines
     lst = filter(lambda x: x, lst)
@@ -20,7 +20,7 @@ def _db_write(lst):
     # Remove duplicates and sort the groups
     lst = list(sorted(list(set(lst))))
     # Write groups to db
-    with open(c.db_path, 'w') as f:
+    with open(conf.db_path, 'w') as f:
         f.write('\n'.join(lst) + '\n')
 
 

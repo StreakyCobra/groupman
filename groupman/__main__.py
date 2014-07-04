@@ -4,7 +4,7 @@ import argparse
 
 import groupman as gm
 import groupman.commands
-from groupman.core.utils import load_package_modules
+from groupman.utils.plugin import load_package_modules
 
 # The package containing the commands
 cmd_package = groupman.commands

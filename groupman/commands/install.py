@@ -4,8 +4,8 @@
 import sys
 
 from groupman.core.db import db_add
-from groupman.core.groups import existing_groups, installed_groups
-from groupman.core.prettyprint import pr_list, pr_info, pr_success, pr_warn
+from groupman.extra.groups import existing_groups, installed_groups
+from groupman.utils.display import pr_list, pr_info, pr_success, pr_warn
 
 _name = 'install'
 _help = 'install the given group(s) of packages'

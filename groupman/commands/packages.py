@@ -3,8 +3,8 @@
 
 import sys
 
-from groupman.core.packages import installed_packages, desired_packages
-from groupman.core.prettyprint import pr_list, pr_info
+from groupman.extra.packages import installed_packages, desired_packages
+from groupman.utils.display import pr_list, pr_info
 
 _name = 'packages'
 _help = 'give the status of the packages'

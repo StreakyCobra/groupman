@@ -5,17 +5,6 @@ import pkgutil
 import importlib
 
 
-def tbool(val):
-    """Helper function that transform text to bool.
-    Return true is `val` is equal (in lowercase) with:
-        - yes
-        - true
-        - t
-        - 1
-    """
-    return val.lower() in ('yes', 'true', 't', '1')
-
-
 def load_module(module_name):
     """Load and return a module dynamically from its name."""
     # Load the module dynamically

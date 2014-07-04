@@ -13,5 +13,7 @@ setup(name=gm.__appname__,
       url=gm.__projecturl__,
       packages=['groupman',
                 'groupman.commands',
-                'groupman.core'],
+                'groupman.core',
+                'groupman.extra',
+                'groupman.utils'],
       scripts=['scripts/grpman'])

@@ -81,7 +81,7 @@ if not os.path.isdir(groups_path):
 user_conf = _read_conf(config_path)
 
 
-def g(val):
+def get(val):
     """Get a configuration value by its key.
     Return user defined value if existing, otherwise the defaults value. Raise
     an KeyError if the key is not existing in both.

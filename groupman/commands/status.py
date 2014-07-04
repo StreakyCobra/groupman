@@ -3,8 +3,8 @@
 
 import sys
 
-from groupman.core.groups import existing_groups, installed_groups
-from groupman.core.prettyprint import pr_list, pr_info
+from groupman.extra.groups import existing_groups, installed_groups
+from groupman.utils.display import pr_list, pr_info
 
 _name = 'status'
 _help = 'give the status of the group(s)'
