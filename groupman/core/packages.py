@@ -2,7 +2,7 @@
 """Helper to manage packages."""
 
 from groupman.core.pacman import pacman
-from groupman.core.groups import desired_groups
+from groupman.core.groups import installed_groups
 
 
 def installed_packages():
@@ -20,7 +20,7 @@ def installed_packages():
 def desired_packages():
     """List desired packages regarding to installed groups."""
     # Get all installed groups
-    groups = desired_groups()
+    groups = installed_groups()
     # Get desired packages from groups
     desired = [p for group in groups for p in group['all_packages']]
     # Return cleaned and sorted list of packags
