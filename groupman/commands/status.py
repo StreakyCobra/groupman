@@ -25,7 +25,8 @@ def run(args):
     # Get installed groups
     installed = list(map(lambda x: x['name'], installed_groups()))
     # Dependencies
-    depends = [d for group in installed_groups() for d in group['all_depends']]
+    depends = [d for group in installed_groups() for d in group['all_depends']
+               if d not in installed]
     # Not installed groups
     not_installed = [group for group in existing if group not in installed and
                      group not in depends]
