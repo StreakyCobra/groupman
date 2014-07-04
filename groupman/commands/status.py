@@ -3,7 +3,7 @@
 
 import sys
 
-from groupman.core.groups import existing_groups, installed_groups, deps_groups
+from groupman.core.groups import existing_groups, installed_groups
 from groupman.core.prettyprint import pr_list, pr_info
 
 _name = 'status'
@@ -25,22 +25,22 @@ def run(args):
     # Get installed groups
     installed = list(map(lambda x: x['name'], installed_groups()))
     # Dependencies
-    depends = [d for group in installed_groups() for d in deps_groups(group['name'])]
+    depends = [d for group in installed_groups() for d in group['all_depends']]
     # Not installed groups
     not_installed = [group for group in existing if group not in installed and
                      group not in depends]
     # Display installed packages
     if installed:
         pr_info("Installed (explicit):", boxed=True)
-        pr_list('\n'.join(installed))
+        pr_list('\n'.join(sorted(list(set(installed)))))
     # Display installed packages
     if depends:
         pr_info("Installed (dependency):", boxed=True)
-        pr_list('\n'.join(depends))
+        pr_list('\n'.join(sorted(list(set(depends)))))
     # Display not installed packages
     if not_installed:
         pr_info("Not installed", boxed=True)
-        pr_list('\n'.join(not_installed))
+        pr_list('\n'.join(sorted(list(set(not_installed)))))
 
 
 def completion(args):

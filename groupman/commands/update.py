@@ -4,8 +4,7 @@
 import sys
 
 from groupman.core.config import g
-from groupman.core.db import db_list
-from groupman.core.groups import group_info, installed_packages, deps_packages
+from groupman.core.packages import desired_packages, installed_packages
 from groupman.core.pacman import pacman
 from groupman.core.prettyprint import pr_list, pr_info
 
@@ -23,10 +22,8 @@ def run(args):
     # If the completion is wanted
     if args.completion:
         completion(args)
-    # Get installed groups from DB
-    groups = list(map(group_info, db_list()))
     # List of needed packages
-    desired = [d for group in groups for d in deps_packages(group['name'])]
+    desired = desired_packages()
     # List of installed packages
     installed = installed_packages()
     # List of packages to install
@@ -36,10 +33,10 @@ def run(args):
     # Display packages
     if to_install:
         pr_info("Package(s) to install:", boxed=True)
-        pr_list('\n'.join(to_install))
+        pr_list('\n'.join(sorted(to_install)))
     if to_remove:
         pr_info("Package(s) to remove:", boxed=True)
-        pr_list('\n'.join(to_remove))
+        pr_list('\n'.join(sorted(to_remove)))
     # Install missing packages
     if to_install:
         pr_info("Installing...")

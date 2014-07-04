@@ -6,7 +6,7 @@ import sys
 
 import groupman.core.config as c
 from groupman.core.db import db_add
-from groupman.core.groups import installed_packages
+from groupman.core.packages import installed_packages
 from groupman.core.prettyprint import pr_success, pr_error
 
 _name = 'init'
