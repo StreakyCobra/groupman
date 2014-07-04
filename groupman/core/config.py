@@ -9,12 +9,12 @@ defaults = OrderedDict()
 defaults['EDITOR'] = os.environ.get('EDITOR', 'vim')
 defaults['PACMAN_CMD'] = os.environ.get('PACMAN_CMD', 'pacman')
 defaults['PACMAN_SUDO'] = 'true'
-defaults['PACMAN_INSTALL'] = '-S'
+defaults['PACMAN_INSTALL'] = '-S --needed'
 defaults['PACMAN_REMOVE'] = '-Rs'
 
 # Special configuration
 if defaults['PACMAN_CMD'] == 'yaourt':
-    defaults['PACMAN_INSTALL'] = '-S'
+    defaults['PACMAN_INSTALL'] = '-S --needed'
     defaults['PACMAN_SUDO'] = 'false'
     defaults['PACMAN_REMOVE'] = '-Rncs'
 
