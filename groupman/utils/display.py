@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Pretty printing."""
+"""Handling output of the program."""
 
 import sys
 from termcolor import colored

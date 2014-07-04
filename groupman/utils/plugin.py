@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Some utility functions."""
+"""Utility function to make plugin system."""
 
 import pkgutil
 import importlib

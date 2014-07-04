@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Helper to manage packages."""
+"""Helper to work with packages."""
 
 from groupman.core.pacman import pacman
 from groupman.extra.groups import installed_groups
