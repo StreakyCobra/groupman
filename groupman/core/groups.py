@@ -6,7 +6,6 @@ from collections import OrderedDict
 
 import groupman.core.config as conf
 from groupman.core.db import db_list, db_del
-from groupman.core.prettyprint import pr_list, pr_error
 
 SYM_GROUP = '@'
 SYM_COMMENT = '#'
@@ -113,13 +112,10 @@ def check_groups():
     missing = [x for x in installed if x not in existing]
     # Check if any:
     if missing:
-        # Print packages
-        pr_error("The following groups are listed in database but are not existing:", boxed=True)
-        pr_list('\n'.join(missing))
         # Remove them from db
         for x in missing:
             db_del(x)
-        # Say that is now fixed
-        pr_error("Database fixed")
 
+
+# Check group when this module is loaded, but only if not in completion mode
 check_groups()
