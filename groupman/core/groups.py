@@ -117,7 +117,8 @@ def check_groups():
         pr_error("The following groups are listed in database but are not existing:", boxed=True)
         pr_list('\n'.join(missing))
         # Remove them from db
-        map(db_del, missing)
+        for x in missing:
+            db_del(x)
         # Say that is now fixed
         pr_error("Database fixed")
 
