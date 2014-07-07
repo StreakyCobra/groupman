@@ -8,11 +8,9 @@ from groupman.extra.groups import installed_groups
 def installed_packages():
     """List explicitly installed packages that are not in base or base-devel."""
     # Get all explicitly installed packages
-    explicit_packages = pacman(['-Qeq'],
-                               False).strip().split('\n')
+    explicit_packages = pacman(['-Qeq'], False).strip().split('\n')
     # Get installed packages in base base-devel groupS
-    base_packages = pacman(['-Qgq', 'base', 'base-devel'],
-                           False).strip().split('\n')
+    base_packages = pacman(['-Qgq', 'base'], False).strip().split('\n')
     # Return all explicitly install package not in base or base-devel
     return [x for x in explicit_packages if x not in base_packages]
 
