@@ -104,7 +104,7 @@ def existing_groups():
     # Get all existing groups
     lst = _existing_groups_names()
     # Read and return groups
-    return sorted(list(set(map(group_info, lst))))
+    return list(map(group_info, lst))
 
 
 def installed_groups():
@@ -112,7 +112,7 @@ def installed_groups():
     # Get all groups in db
     lst = db_list()
     # Read and return groups
-    return sorted(list(set(map(group_info, lst))))
+    return list(map(group_info, lst))
 
 
 def check_groups():
