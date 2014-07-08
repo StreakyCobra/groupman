@@ -96,7 +96,7 @@ def _existing_groups_names():
     # Keep only files
     files = filter(lambda x: os.path.isfile(os.path.join(conf.groups_path, x)), lst)
     # Return the resulting list of groups names
-    return list(files)
+    return sorted(list(set(files)))
 
 
 def existing_groups():
