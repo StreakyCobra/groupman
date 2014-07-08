@@ -8,6 +8,7 @@ import groupman.core.config as conf
 from groupman.core.db import db_list, db_del
 
 SYM_GROUP = '@'
+SYM_REMOVE = '-'
 SYM_COMMENT = '#'
 
 
@@ -25,11 +26,15 @@ def _parse(lines):
     # Remove empty lines
     parsed = list(filter(lambda x: x, parsed))
     # Extract packages
-    packages = [x for x in parsed if x[0] != SYM_GROUP]
+    packages = [x for x in parsed if x[0] != SYM_GROUP and x[0] != SYM_REMOVE]
     # Extract depends
     depends = [x[1:] for x in parsed if x[0] == SYM_GROUP]
+    # Extract depends
+    removed = [x[1:] for x in parsed if x[0] == SYM_REMOVE]
     # Return the result of parsing
-    return sorted(list(set(depends))), sorted(list(set(packages)))
+    return (sorted(list(set(depends))),
+            sorted(list(set(packages))),
+            sorted(list(set(removed))))
 
 
 def _parse_recursive(name):
@@ -38,13 +43,17 @@ def _parse_recursive(name):
     # Get packages and depends
     depends = list(group['depends'])
     packages = list(group['packages'])
+    removed = list(group['removed'])
     # Recursive generation of depends and packages
     for dep in group['depends']:
-        rec_depends, rec_packages = _parse_recursive(dep)
+        rec_depends, rec_packages, rec_removed = _parse_recursive(dep)
         depends += rec_depends
         packages += rec_packages
+        removed += rec_removed
     # Return results
-    return sorted(list(set(depends))), sorted(list(set(packages)))
+    return (sorted(list(set(depends))),
+            sorted(list(set(packages))),
+            sorted(list(set(removed))))
 
 
 def group_info(name, recursive=True):
@@ -54,24 +63,28 @@ def group_info(name, recursive=True):
     # Prepare the list of packages and depends
     packages = []
     depends = []
+    removed = []
     if recursive:
         all_packages = []
         all_depends = []
+        all_removed = []
     # Read the file if existing
     if os.path.isfile(path):
         with open(path, 'r') as f:
-            depends, packages = _parse(f.readlines())
+            depends, packages, removed = _parse(f.readlines())
         if recursive:
-            all_depends, all_packages = _parse_recursive(name)
+            all_depends, all_packages, all_removed = _parse_recursive(name)
     # Prepare the result
     info = OrderedDict()
     info['name'] = name
     info['path'] = path
     info['depends'] = depends
     info['packages'] = packages
+    info['removed'] = removed
     if recursive:
         info['all_depends'] = all_depends
         info['all_packages'] = all_packages
+        info['all_removed'] = all_removed
     # Return the informations
     return info
 

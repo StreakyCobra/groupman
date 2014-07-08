@@ -1,18 +1,26 @@
 # -*- coding: utf-8 -*-
 """Helper to work with packages."""
 
+from groupman.core.config import get
 from groupman.core.pacman import pacman
 from groupman.extra.groups import installed_groups
+
+
+def remove_unmanaged(packages):
+    # Get unmanaged packages
+    unmanaged = pacman(['-Qgq'] + get('IGNORE_GROUPS', aslist=True),
+                       False).strip().split('\n')
+    # Remove unmanaged packages
+    filtered = [x for x in packages if x not in unmanaged]
+    return sorted(list(set(filtered)))
 
 
 def installed_packages():
     """List explicitly installed packages that are not in base or base-devel."""
     # Get all explicitly installed packages
     explicit_packages = pacman(['-Qeq'], False).strip().split('\n')
-    # Get installed packages in base base-devel groupS
-    base_packages = pacman(['-Qgq', 'base'], False).strip().split('\n')
-    # Return all explicitly install package not in base or base-devel
-    return [x for x in explicit_packages if x not in base_packages]
+    # Return all explicitly install package without unmanaged ones
+    return remove_unmanaged(explicit_packages)
 
 
 def desired_packages():
@@ -21,5 +29,11 @@ def desired_packages():
     groups = installed_groups()
     # Get desired packages from groups
     desired = [p for group in groups for p in group['all_packages']]
-    # Return cleaned and sorted list of packags
-    return sorted(list(set(desired)))
+    # Get unwanted packages from groups
+    unwanted = [p for group in groups for p in group['all_removed']]
+    # Remove unwanted packages
+    desired = [p for p in desired if p not in unwanted]
+    # Remove unmanaged packages
+    desired = remove_unmanaged(desired)
+    # Return desired packages
+    return desired

@@ -5,15 +5,16 @@ import os
 from collections import OrderedDict
 
 # Configuration list separator
-SEP = '+'
+SEP = ','
 
 # Default configuration values
 defaults = OrderedDict()
 defaults['EDITOR'] = os.environ.get('EDITOR', 'vim')
 defaults['PACMAN_CMD'] = os.environ.get('PACMAN_CMD', 'pacman')
 defaults['PACMAN_SUDO'] = 'true'
-defaults['PACMAN_INSTALL'] = '-S ' + SEP + ' --needed'
+defaults['PACMAN_INSTALL'] = '-S' + SEP + '--needed'
 defaults['PACMAN_REMOVE'] = '-Rs'
+defaults['IGNORE_GROUPS'] = 'base' + SEP + 'base-devel'
 
 # Special configuration
 if defaults['PACMAN_CMD'] == 'yaourt':
