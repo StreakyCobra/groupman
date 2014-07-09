@@ -25,7 +25,7 @@ def all_installed_packages():
     return _remove_unmanaged(all_packages)
 
 
-def explict_installed_packages():
+def explicit_installed_packages():
     """List explicitly installed packages without unmanaged ones."""
     # Get all explicitly installed packages
     explicit_packages = pacman(['-Qeq'], False).strip().split('\n')
