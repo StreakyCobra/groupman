@@ -17,4 +17,5 @@ setup(name=gm.__appname__,
                 'groupman.extra',
                 'groupman.utils'],
       scripts=['scripts/grpman'],
-      install_requires=['termcolor'])
+      install_requires=['termcolor',
+                        'decorator'])
