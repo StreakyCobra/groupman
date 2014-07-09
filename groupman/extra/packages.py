@@ -4,13 +4,21 @@
 from groupman.core.config import get
 from groupman.core.pacman import pacman
 from groupman.extra.groups import installed_groups
+from groupman.utils.decorators import cache
+
+
+@cache
+def _unmanaged():
+    # Get unmanaged packages
+    unmanaged = pacman(['-Qgq'] + get('IGNORE_GROUPS', aslist=True),
+                       False).strip().split('\n')
+    return unmanaged
 
 
 def _remove_unmanaged(packages):
     """Remove unmanaged ."""
     # Get unmanaged packages
-    unmanaged = pacman(['-Qgq'] + get('IGNORE_GROUPS', aslist=True),
-                       False).strip().split('\n')
+    unmanaged = _unmanaged()
     # Remove unmanaged packages
     filtered = [x for x in packages if x not in unmanaged]
     # Return the filtered list of packages
