@@ -9,7 +9,7 @@ from groupman.core.db import db_list, db_del
 from groupman.utils.decorators import cache, once
 
 SYM_GROUP = '@'
-SYM_REMOVE = '-'
+SYM_REMOVE = '/'
 SYM_COMMENT = '#'
 
 
