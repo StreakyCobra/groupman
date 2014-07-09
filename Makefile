@@ -8,7 +8,7 @@ help: $(ENVFOLDER)
 	@echo "    eval \$$(make setup)"
 
 setup: $(ENVFOLDER)
-	@echo "source ./$(ENVFOLDER)/bin/activate; export PATH=./$(ENVFOLDER)/bin:$$PATH"
+	@echo "source ./$(ENVFOLDER)/bin/activate; source ./completions/zsh; export PATH=./$(ENVFOLDER)/bin:$$PATH"
 
 clean:
 	@rm -rf $(ENVFOLDER)
