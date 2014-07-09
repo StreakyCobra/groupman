@@ -44,15 +44,18 @@ def _read_conf(filepath):
     lines = filter(lambda x: x[0] != '#', lines)
     lines = map(lambda x: x.split('#')[0], lines)
     # Split at equal sign
-    lines = map(lambda x: x.split('='), lines)
-    # Remove lines that have not exactly 2 values
-    lines = filter(lambda x: len(x) == 2, lines)
+    lines = list(map(lambda x: x.split('='), lines))
+    # Remove lines that have not exactly 2 values
+    flags = filter(lambda x: len(x) == 1, lines)
+    params = filter(lambda x: len(x) == 2, lines)
+    # Handle flags
+    flags = list(map(lambda x: x[0].strip(), flags))
     # Prepare to be transformed as a dict
-    lines = map(lambda x: (x[0].strip(), x[1].strip()), lines)
+    params = map(lambda x: (x[0].strip(), x[1].strip()), params)
     # Transform to dict
-    vals = OrderedDict(lines)
+    params = OrderedDict(params)
     # Return configuration
-    return vals
+    return flags, params
 
 
 def _write_conf(vals, filepath):
@@ -82,7 +85,7 @@ if not os.path.isdir(groups_path):
     os.makedirs(groups_path)
 
 # Read the user configuration
-user_conf = _read_conf(config_path)
+flags, user_conf = _read_conf(config_path)
 
 
 def get(val, aslist=False):
@@ -105,3 +108,8 @@ def get(val, aslist=False):
         return list(map(lambda x: x.strip(), result.split(SEP)))
     else:
         return result
+
+
+def is_flag_set(name):
+    """Return true if a configuration flag is set, false otherwise."""
+    return name in flags
