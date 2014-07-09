@@ -3,7 +3,7 @@
 
 import sys
 
-from groupman.extra.packages import installed_packages, desired_packages
+from groupman.extra.packages import explicit_installed_packages, desired_packages
 from groupman.utils.display import pr_list, pr_info
 
 _name = 'packages'
@@ -23,7 +23,7 @@ def run(args):
     # List of needed packages
     desired = desired_packages()
     # List of installed packages
-    installed = installed_packages()
+    installed = explicit_installed_packages()
     # List of packages to install
     to_install = sorted([x for x in desired if x not in installed])
     # List of packages to remove

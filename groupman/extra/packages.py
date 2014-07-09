@@ -15,7 +15,15 @@ def remove_unmanaged(packages):
     return sorted(list(set(filtered)))
 
 
-def installed_packages():
+def all_installed_packages():
+    """List explicitly installed packages that are not in base or base-devel."""
+    # Get all explicitly installed packages
+    explicit_packages = pacman(['-Qq'], False).strip().split('\n')
+    # Return all explicitly install package without unmanaged ones
+    return remove_unmanaged(explicit_packages)
+
+
+def explict_installed_packages():
     """List explicitly installed packages that are not in base or base-devel."""
     # Get all explicitly installed packages
     explicit_packages = pacman(['-Qeq'], False).strip().split('\n')

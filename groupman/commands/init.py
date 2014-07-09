@@ -6,7 +6,7 @@ import sys
 
 import groupman.core.config as conf
 from groupman.core.db import db_add
-from groupman.extra.packages import installed_packages
+from groupman.extra.packages import explicit_installed_packages
 from groupman.utils.display import pr_success, pr_error
 
 _name = 'init'
@@ -29,7 +29,7 @@ def run(args):
                  "will not initalize a second time")
         sys.exit(1)
     # Get installed packages
-    packages = installed_packages()
+    packages = explicit_installed_packages()
     # Create a base group with installed packages
     with open(os.path.join(conf.groups_path, 'base'), 'w') as f:
         f.write('\n'.join(packages))

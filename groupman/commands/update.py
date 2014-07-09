@@ -5,7 +5,7 @@ import sys
 
 from groupman.core.config import get
 from groupman.core.pacman import pacman
-from groupman.extra.packages import desired_packages, installed_packages
+from groupman.extra.packages import desired_packages, explicit_installed_packages
 from groupman.utils.display import pr_list, pr_info
 
 _name = 'update'
@@ -25,7 +25,7 @@ def run(args):
     # List of needed packages
     desired = desired_packages()
     # List of installed packages
-    installed = installed_packages()
+    installed = explicit_installed_packages()
     # List of packages to install
     to_install = list(set([x for x in desired if x not in installed]))
     # List of packages to remove
