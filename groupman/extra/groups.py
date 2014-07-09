@@ -6,6 +6,7 @@ from collections import OrderedDict
 
 import groupman.core.config as conf
 from groupman.core.db import db_list, db_del
+from groupman.utils.decorators import cache, once
 
 SYM_GROUP = '@'
 SYM_REMOVE = '-'
@@ -37,6 +38,7 @@ def _parse(lines):
             sorted(list(set(removed))))
 
 
+@cache
 def _parse_recursive(name):
     # Get non recursive information about the group
     group = group_info(name, recursive=False)
@@ -56,6 +58,7 @@ def _parse_recursive(name):
             sorted(list(set(removed))))
 
 
+@cache
 def group_info(name, recursive=True):
     """Return informations about a given group name."""
     # Path to the group file
@@ -89,6 +92,7 @@ def group_info(name, recursive=True):
     return info
 
 
+@cache
 def _existing_groups_names():
     """List all available groups names in the configuration folder."""
     # List the content of the groups folder
@@ -99,6 +103,7 @@ def _existing_groups_names():
     return sorted(list(set(files)))
 
 
+@cache
 def existing_groups():
     """List all available groups in the configuration folder."""
     # Get all existing groups
@@ -115,6 +120,7 @@ def installed_groups():
     return list(map(group_info, lst))
 
 
+@once
 def check_groups():
     """Verify that installed groups in db are still existing."""
     # Get installed groups

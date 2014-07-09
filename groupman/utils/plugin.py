@@ -25,5 +25,3 @@ def load_package_modules(package):
     modules = [load_module('%s.%s' % (pkgname, name)) for name in names]
     # Return a list of pair of names and modules
     return zip(names, modules)
-
-

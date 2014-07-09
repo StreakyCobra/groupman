@@ -55,3 +55,11 @@ def cache(func, *args, **kw):
     else:
         cache[key] = result = func(*args, **kw)
         return result
+
+
+@decorator
+def once(func, *args, **kw):
+    """Ensure that a function is called only once."""
+    if '_OK' not in func.__dict__:
+        func._OK = True
+        return func(*args, **kw)

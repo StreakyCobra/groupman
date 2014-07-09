@@ -4,7 +4,7 @@
 from groupman.core.config import get
 from groupman.core.pacman import pacman
 from groupman.extra.groups import installed_groups
-from groupman.utils.decorators import cache
+from groupman.utils.decorators import cache, trace
 
 
 @cache
@@ -25,6 +25,7 @@ def _remove_unmanaged(packages):
     return sorted(list(set(filtered)))
 
 
+@cache
 def all_installed_packages():
     """List all installed packages."""
     # Get all installed packages
@@ -33,6 +34,7 @@ def all_installed_packages():
     return _remove_unmanaged(all_packages)
 
 
+@cache
 def explicit_installed_packages():
     """List explicitly installed packages without unmanaged ones."""
     # Get all explicitly installed packages

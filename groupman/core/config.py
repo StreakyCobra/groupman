@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Manage the configuration."""
+"""Manage the configuration of groupman."""
 
 import os
 from collections import OrderedDict
@@ -17,10 +17,6 @@ defaults['PACMAN_REMOVE'] = '-Rs'
 defaults['PACMAN_SET_EXP'] = '-D' + SEP + '--asexplicit'
 defaults['PACMAN_SET_DEP'] = '-D' + SEP + '--asdeps'
 defaults['IGNORE_GROUPS'] = 'base' + SEP + 'base-devel'
-
-# Special configuration
-if defaults['PACMAN_CMD'] == 'yaourt':
-    defaults['PACMAN_SUDO'] = 'false'
 
 # Set some paths
 home_path     = os.environ.get('HOME')
