@@ -2,7 +2,8 @@
 """Some decorators."""
 
 import sys
-from decorator import decorator
+from inspect import signature
+from functools import wraps
 
 from groupman.core.config import is_flag_set
 
@@ -24,42 +25,60 @@ def _debug_only(f):
         return _identity
 
 
-@decorator
 @_debug_only
-def trace(f, *args, **kw):
+def trace(f):
     """Trace a function by printing all the call made."""
-    kwstr = ', '.join('%r: %r' % (k, kw[k]) for k in sorted(kw))
-    print("Calling %s() with args %s, {%s}" % (f.__name__, args, kwstr),
-          file=sys.stderr)
-    return f(*args, **kw)
+    @wraps(f)
+    def wrapper(*args, **kw):
+        kwstr = ', '.join('%r: %r' % (k, kw[k]) for k in sorted(kw))
+        print("Calling %s() with args %s, {%s}" % (f.__name__, args, kwstr),
+              file=sys.stderr)
+        return f(*args, **kw)
+
+    # Override signature
+    wrapper.__signature__ = signature(f)
+
+    return wrapper
 
 
-@decorator
-def cache(func, *args, **kw):
+def cache(f):
     """Cache the result of a function call regarding to its arguments."""
-    # Ensure keywords arguments are hashable if existing
-    if kw:
-        key = args, frozenset(kw.iteritems())
-    else:
-        key = args
+    @wraps(f)
+    def wrapper(*args, **kw):
+        # Ensure keywords arguments are hashable if existing
+        if kw:
+            key = args, frozenset(kw.items())
+        else:
+            key = args
 
-    # Get the cache and set it if not already existing
-    if '_cache' not in func.__dict__:
-        func._cache = dict()
-    cache = func._cache
+        # Get the cache and set it if not already existing
+        if '_cache' not in f.__dict__:
+            f._cache = dict()
+        cache = f._cache
 
-    # If already computed, return cached result
-    if key in cache:
-        return cache[key]
-    # Otherwise compute and cache results
-    else:
-        cache[key] = result = func(*args, **kw)
-        return result
+        # If already computed, return cached result
+        if key in cache:
+            return cache[key]
+        # Otherwise compute and cache results
+        else:
+            cache[key] = result = f(*args, **kw)
+            return result
+
+    # Override signature
+    wrapper.__signature__ = signature(f)
+
+    return wrapper
 
 
-@decorator
-def once(func, *args, **kw):
+def once(f):
     """Ensure that a function is called only once."""
-    if '_OK' not in func.__dict__:
-        func._OK = True
-        return func(*args, **kw)
+    @wraps(f)
+    def wrapper(*args, **kw):
+        if '_OK' not in f.__dict__:
+            f._OK = True
+            return f(*args, **kw)
+
+    # Override signature
+    wrapper.__signature__ = signature(f)
+
+    return wrapper

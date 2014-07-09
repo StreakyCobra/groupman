@@ -4,7 +4,7 @@
 from groupman.core.config import get
 from groupman.core.pacman import pacman
 from groupman.extra.groups import installed_groups
-from groupman.utils.decorators import cache, trace
+from groupman.utils.decorators import cache
 
 
 @cache
