@@ -8,19 +8,17 @@ from functools import wraps
 from groupman.core.config import is_flag_set
 
 
-def _identity(f, *args, **kw):
-    """Identity function for @decorator functions."""
-    # Do nothing, just apply the function
-    return f(*args, **kw)
-
-
 def _debug_only(f):
     """Decorator to specify decorator that must be used only in debug mode."""
-    # If debug mode is set, return the written decorator
+    @wraps(f)
+    def _identity(f, *args, **kw):
+        # Do nothing, just apply the function
+        return f
+
+    _identity.__signature__ = signature(f)
+
     if is_flag_set('DEBUG'):
         return f
-    # Otherwise return the identity function that do nothing special,
-    # i.e. disable the decorator
     else:
         return _identity
 
@@ -79,6 +77,36 @@ def once(f):
             return f(*args, **kw)
 
     # Override signature
+    wrapper.__signature__ = signature(f)
+
+    return wrapper
+
+
+@_debug_only
+def pre(cond):
+    """Pre-condition decorator."""
+    def prewrap(f):
+        @wraps(f)
+        def wrapper(*args, **kw):
+            cond(*args, **kw)
+            return f(*args, **kw)
+
+        wrapper.__signature__ = signature(f)
+
+        return wrapper
+
+    return prewrap
+
+
+@_debug_only
+def post(f, cond):
+    """Post-condition decorator."""
+    @wraps(f)
+    def wrapper(*args, **kw):
+        result = f(*args, **kw)
+        cond(result)
+        return result
+
     wrapper.__signature__ = signature(f)
 
     return wrapper
