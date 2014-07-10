@@ -23,22 +23,6 @@ def _debug_only(f):
         return _identity
 
 
-@_debug_only
-def trace(f):
-    """Trace a function by printing all the call made."""
-    @wraps(f)
-    def wrapper(*args, **kw):
-        kwstr = ', '.join('%r: %r' % (k, kw[k]) for k in sorted(kw))
-        print("Calling %s() with args %s, {%s}" % (f.__name__, args, kwstr),
-              file=sys.stderr)
-        return f(*args, **kw)
-
-    # Override signature
-    wrapper.__signature__ = signature(f)
-
-    return wrapper
-
-
 def cache(f):
     """Cache the result of a function call regarding to its arguments."""
     @wraps(f)
@@ -83,19 +67,32 @@ def once(f):
 
 
 @_debug_only
+def trace(f):
+    """Trace a function by printing all the call made."""
+    @wraps(f)
+    def wrapper(*args, **kw):
+        kwstr = ', '.join('%r: %r' % (k, kw[k]) for k in sorted(kw))
+        print("Calling %s() with args %s, {%s}" % (f.__name__, args, kwstr),
+              file=sys.stderr)
+        return f(*args, **kw)
+
+    # Override signature
+    wrapper.__signature__ = signature(f)
+
+    return wrapper
+
+
+@_debug_only
 def pre(cond):
     """Pre-condition decorator."""
-    def prewrap(f):
-        @wraps(f)
-        def wrapper(*args, **kw):
-            cond(*args, **kw)
-            return f(*args, **kw)
+    @wraps(f)
+    def wrapper(*args, **kw):
+        cond(*args, **kw)
+        return f(*args, **kw)
 
-        wrapper.__signature__ = signature(f)
+    wrapper.__signature__ = signature(f)
 
-        return wrapper
-
-    return prewrap
+    return wrapper
 
 
 @_debug_only
