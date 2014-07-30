@@ -28,13 +28,19 @@ def run(args):
     to_install = sorted([x for x in desired if x not in installed])
     # List of packages to remove
     to_remove = sorted([x for x in installed if x not in desired])
+    # Remember if everything is up to date
+    uptodate = True
     # Display packages
     if to_install:
         pr_info("Missing packages:", boxed=True)
         pr_list('\n'.join(to_install))
+        uptodate = False
     if to_remove:
         pr_info("Extra packages:", boxed=True)
         pr_list('\n'.join(to_remove))
+        uptodate = False
+    if not uptodate:
+        sys.exit(1)
 
 
 def completion(args):
