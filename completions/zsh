@@ -1,0 +1,18 @@
+_grpman() {
+  local word words completions
+  read -cA words
+
+  word="$1"
+
+  shift words
+
+  if [ "${#words}" -lt 2 ]; then
+    completions="$(grpman --completion)"
+  else
+    completions="$(grpman --completion ${words})"
+  fi
+
+  reply=( "${(ps:\n:)completions}" )
+}
+
+compctl -K _grpman grpman
