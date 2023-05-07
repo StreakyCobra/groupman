@@ -10,8 +10,7 @@ from groupman.utils.decorators import cache
 @cache
 def _unmanaged():
     # Get unmanaged packages
-    unmanaged = pacman(['-Qgq'] + get('IGNORE_GROUPS', aslist=True),
-                       False).strip().split('\n')
+    unmanaged = pacman(["-Qg"], False).strip().split("\n")
     return unmanaged
 
 
